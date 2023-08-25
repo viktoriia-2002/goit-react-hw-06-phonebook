@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { nanoid } from 'nanoid';
+
 import 'react-toastify/dist/ReactToastify.css';
 import { toast } from 'react-toastify';
 
@@ -18,20 +18,13 @@ const ContactForm = ({ contacts, handleNewContact }) => {
       contact => contact.name.toLowerCase() === name.toLowerCase()
     );
 
-    // if (duplicateName) {
-    //   alert(`${name} is already in contacts.`);
-    //   return;
-    // }
     if (duplicateName) {
       toast.error(`${name} is already in contacts.`);
       return;
     }
 
-    const id = nanoid();
-
     const newContact = {
       name: name,
-      id: id,
       number: number,
     };
 

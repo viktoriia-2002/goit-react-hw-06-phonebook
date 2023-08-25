@@ -1,39 +1,33 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import ContactList from 'components/ContactList';
 import Filter from 'components/Filter';
 import ContactForm from './ContactForm';
 import { Container } from './App.styled';
-import storage from '../storage';
-import { useEffect } from 'react';
+
+import { addContact, deleteContact } from 'redux/contactsSlice';
+import { setStatusFilter } from 'redux/filterSlice';
 
 const App = () => {
-  const [contacts, setContacts] = useState([]);
-  const [filter, setFilter] = useState('');
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    const storedContacts = storage.load('contacts');
-
-    if (storedContacts && Array.isArray(storedContacts)) {
-      setContacts(storedContacts);
-    }
-  }, [setContacts]);
+  const { contacts, filter } = useSelector(state => ({
+    contacts: state.contacts,
+    filter: state.filter,
+  }));
 
   const handleNewContact = newContact => {
-    const updatedContacts = [...contacts, newContact];
-    setContacts(updatedContacts);
-    storage.save('contacts', updatedContacts);
+    dispatch(addContact(newContact));
   };
 
   const handleFilter = event => {
     const filterValue = event.target.value;
-    setFilter(filterValue);
+    console.log({ filterValue });
+    dispatch(setStatusFilter(filterValue));
   };
 
-  const handleDelete = id => {
-    console.log({ id });
-    const updatedContacts = contacts.filter(contact => contact.id !== id);
-    setContacts(updatedContacts);
-    storage.save('contacts', updatedContacts);
+  const handleDelete = name => {
+    dispatch(deleteContact(name));
   };
 
   const filteredContacts = contacts.filter(contact =>

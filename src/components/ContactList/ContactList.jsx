@@ -10,7 +10,7 @@ const ContactList = ({ contacts, handleDelete }) => {
         <ContactListItem
           key={person.id}
           person={person}
-          handleDelete={handleDelete}
+          handleDelete={() => handleDelete(person.name)}
         />
       ))}
     </List>
