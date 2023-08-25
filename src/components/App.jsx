@@ -1,11 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import ContactList from 'components/ContactList';
 import Filter from 'components/Filter';
 import ContactForm from './ContactForm';
 import { Container } from './App.styled';
+import storage from '../storage';
 
-import { addContact, deleteContact } from 'redux/contactsSlice';
+import {
+  addContact,
+  deleteContact,
+  replaceContacts,
+} from 'redux/contactsSlice';
 import { setStatusFilter } from 'redux/filterSlice';
 
 const App = () => {
@@ -16,7 +21,19 @@ const App = () => {
     filter: state.filter,
   }));
 
+  console.log({ contacts });
+
+  useEffect(() => {
+    const storedContacts = storage.load('contacts');
+
+    if (storedContacts && Array.isArray(storedContacts)) {
+      dispatch(replaceContacts(storedContacts));
+    }
+  }, [dispatch]);
+
   const handleNewContact = newContact => {
+    const updatedContacts = [...contacts, newContact];
+    storage.save('contacts', updatedContacts);
     dispatch(addContact(newContact));
   };
 
@@ -26,8 +43,10 @@ const App = () => {
     dispatch(setStatusFilter(filterValue));
   };
 
-  const handleDelete = name => {
-    dispatch(deleteContact(name));
+  const handleDelete = id => {
+    dispatch(deleteContact(id));
+    const updatedContacts = contacts.filter(contact => contact.id !== id);
+    storage.save('contacts', updatedContacts);
   };
 
   const filteredContacts = contacts.filter(contact =>

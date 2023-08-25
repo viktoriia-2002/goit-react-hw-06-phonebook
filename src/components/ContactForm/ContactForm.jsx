@@ -4,7 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { toast } from 'react-toastify';
 
 import { ToastContainer } from 'react-toastify';
-
+import { nanoid } from 'nanoid';
 import { Form, Label, Input, Button } from './ContactForm.styled';
 
 const ContactForm = ({ contacts, handleNewContact }) => {
@@ -24,6 +24,7 @@ const ContactForm = ({ contacts, handleNewContact }) => {
     }
 
     const newContact = {
+      id: nanoid(),
       name: name,
       number: number,
     };

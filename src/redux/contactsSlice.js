@@ -1,31 +1,22 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { nanoid } from 'nanoid';
 
 const contactsSlice = createSlice({
   name: 'contacts',
   initialState: [],
   reducers: {
-    addContact: {
-      reducer(state, action) {
-        state.push(action.payload);
-      },
-      prepare(payload) {
-        return {
-          payload: {
-            name: payload.name,
-            id: nanoid(),
-            number: payload.number,
-          },
-        };
-      },
+    addContact(state, action) {
+      state.push(action.payload);
     },
     deleteContact(state, action) {
-      const name = state.findIndex(contact => contact.name === action.payload);
-      state.splice(name, 1);
+      const id = state.findIndex(contact => contact.id === action.payload);
+      state.splice(id, 1);
+    },
+    replaceContacts(state, action) {
+      return action.payload;
     },
   },
 });
 
-// Експортуємо генератори екшенів та редюсер
-export const { addContact, deleteContact } = contactsSlice.actions;
+export const { addContact, deleteContact, replaceContacts } =
+  contactsSlice.actions;
 export const contactsReducer = contactsSlice.reducer;
